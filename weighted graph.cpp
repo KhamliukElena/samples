@@ -2,77 +2,77 @@
 #include <cstdlib>
 #include <ctime>
 
-int** genGraph(int n, int** A)
+int** genGraph(int matrixSize, int** adjacencyMatrix)
 {
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < matrixSize; i++)
     {
-        for (int j = 0; j < n; j++)
+        for (int j = 0; j < matrixSize; j++)
         {
             if (i==j)
-                A[i][j] = 0;
+                adjacencyMatrix[i][j] = 0;
             else
             {
-                A[i][j] = rand() % 2;
+                adjacencyMatrix[i][j] = rand() % 2;
             }
         }
     }
-    return A;
+    return adjacencyMatrix;
 }
 
-void outGraph(int n, int** A)
+void outGraph(int matrixSize, int** adjacencyMatrix)
 {
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < matrixSize; i++)
     {
-        for (int j = 0; j < n; j++)
+        for (int j = 0; j < matrixSize; j++)
         {
-            std::cout<<A[i][j]<<" ";
+            std::cout<<adjacencyMatrix[i][j]<<" ";
         }
         std::cout<<std::endl;
     }
 }
 
-void dfs(int v, int n, int **A, char visited[]) //in depth
+void dfs(int v, int matrixSize, int **adjacencyMatrix, char visited[]) //in depth
 {
     visited[v] = 1;
-    for (int i = 0; i < n; i++) {
-        if (visited[i] == 0 && (A[v][i] == 1 || A[i][v] == 1))
-            dfs(i, n, A, visited);
+    for (int i = 0; i < matrixSize; i++) {
+        if (visited[i] == 0 && (adjacencyMatrix[v][i] == 1 || A[i][v] == 1))
+            dfs(i, matrixSize, adjacencyMatrix, visited);
     }
 }
 
 int main()
 {
-    int n; // matrix size
+    int matrixSize; // matrix size
     std::cout<<"Please, specify size of matrix:";
-    std::cin>>n;
-    while (n<2)
+    std::cin>>matrixSize;
+    while (matrixSize<2)
     {
         std::cout<<"Error!"<<std::endl;
-        std::cin>>n;
+        std::cin>>matrixSize;
     }
-    int** A = new int *[n]; //adjacency matrix, 1 - vertices are connected; 0 - no connection, may be oriented, but w/o route from a node to itself
-    for (int i = 0; i < n; i++)
-        A[i] = new int [n];
+    int** adjacencyMatrix = new int *[matrixSize]; //adjacency matrix, 1 - vertices are connected; 0 - no connection, may be oriented, but w/o route from a node to itself
+    for (int i = 0; i < matrixSize; i++)
+        adjacencyMatrix[i] = new int [matrixSize];
 
 
     srand(time(0));
-    A = genGraph(n, A); //generate a random graph
+    adjacencyMatrix = genGraph(matrixSize, adjacencyMatrix); //generate a random graph
     std::cout<<"Generated graph:"<<std::endl;
-    outGraph(n, A);
+    outGraph(matrixSize, adjacencyMatrix);
 
     int cnt = 0; //connected components
-    char visited[n]; //vertices that were visited
-    for (int i = 0; i < n; i++)
+    char visited[matrixSize]; //vertices that were visited
+    for (int i = 0; i < matrixSize; i++)
     {
         if (visited[i] == 0) {
-            dfs(i, n, A, visited);
+            dfs(i, matrixSize, adjacencyMatrix, visited);
             cnt++;
         }
     }
     std::cout<<"There are "<<cnt<<" connected components of the graph"<<std::endl;
-    for (int i = 0; i < n; i++)
-        delete[] A[i];
-    delete [] A;
+    for (int i = 0; i < matrixSize; i++)
+        delete[] adjacencyMatrix[i];
+    delete [] adjacencyMatrix;
 
     return 0;
 }
